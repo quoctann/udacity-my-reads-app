@@ -1,11 +1,13 @@
 import { useState } from "react";
-import { Link, useLoaderData } from "react-router-dom";
+import { Link, useLoaderData, useOutletContext } from "react-router-dom";
 import BookItem from "./BookItem";
 import * as api from "./BooksAPI";
 import { CustomPath } from "./constant";
 
 const SearchPage = () => {
 	const { allBooks: bookList } = useLoaderData();
+	const updateBookShelf = useOutletContext();
+
 	const [searchResult, setSearchResult] = useState([]);
 
 	const search = async (event) => {
@@ -18,7 +20,7 @@ const SearchPage = () => {
 		const result = await api.search(queryString);
 		if (result?.length) {
 			const idToShelf = {};
-			bookList.map((book) => {
+			bookList.forEach((book) => {
 				if (book?.id && book?.shelf) {
 					idToShelf[book.id] = book.shelf;
 				}
@@ -61,6 +63,8 @@ const SearchPage = () => {
 											bookId={id}
 											getBookList={() => {}}
 											currentShelf={shelf}
+											book={book}
+											updateBookShelf={updateBookShelf}
 										/>
 									);
 							  })

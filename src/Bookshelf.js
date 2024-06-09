@@ -1,16 +1,15 @@
+import PropTypes from "prop-types";
 import BookItem from "./BookItem";
 import { BookShelfCategories } from "./constant";
 
-const Bookshelf = ({ categoryKey, bookList, getBookList }) => {
+const Bookshelf = ({ categoryKey, bookList, getBookList, updateBookShelf }) => {
 	const bookListByCategory = bookList.filter(
 		(book) => book?.shelf === categoryKey
 	);
 
 	return (
 		<div className="bookshelf">
-			<h2 className="bookshelf-title">
-				{BookShelfCategories[categoryKey]}
-			</h2>
+			<h2 className="bookshelf-title">{BookShelfCategories[categoryKey]}</h2>
 			<div className="bookshelf-books">
 				<ol className="books-grid">
 					{bookListByCategory?.length
@@ -25,6 +24,8 @@ const Bookshelf = ({ categoryKey, bookList, getBookList }) => {
 										bookId={id}
 										getBookList={getBookList}
 										currentShelf={categoryKey}
+										book={book}
+										updateBookShelf={updateBookShelf}
 									/>
 								);
 						  })
@@ -33,6 +34,12 @@ const Bookshelf = ({ categoryKey, bookList, getBookList }) => {
 			</div>
 		</div>
 	);
+};
+Bookshelf.propsTypes = {
+	categoryKey: PropTypes.string,
+	bookList: PropTypes.object,
+	getBookList: PropTypes.func,
+	updateBookShelf: PropTypes.func,
 };
 
 export default Bookshelf;

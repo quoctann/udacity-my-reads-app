@@ -13,12 +13,14 @@ const router = createBrowserRouter([
 		path: CustomPath.root,
 		element: <App />,
 		errorElement: <ErrorPage />,
-	},
-	{
-		path: CustomPath.searchPage,
-		element: <SearchPage />,
-		errorElement: <ErrorPage />,
-		loader: loadBookList,
+		children: [
+			{
+				path: CustomPath.searchPage,
+				element: <SearchPage />,
+				errorElement: <ErrorPage />,
+				loader: loadBookList,
+			},
+		],
 	},
 ]);
 

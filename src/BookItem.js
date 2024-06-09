@@ -1,7 +1,5 @@
-import { useState } from "react";
-import { useLocation } from "react-router-dom";
-import * as api from "./BooksAPI";
-import { BookItemCategories, CustomPath } from "./constant";
+import { BookItemCategories } from "./constant";
+import PropTypes from "prop-types";
 
 const BookItem = ({
 	title,
@@ -10,40 +8,11 @@ const BookItem = ({
 	bookId,
 	getBookList,
 	currentShelf,
+	book,
+	updateBookShelf,
 }) => {
 	const backgroundImage = `url("${thumbnail}")`;
 	const optionList = Object.keys(BookItemCategories);
-
-	const currentLocation = useLocation();
-	const [shelf, setShelf] = useState(currentShelf)
-
-	const changeBookCategory = async (event) => {
-		const itemCategory = event.target.value;
-
-		if (
-			!bookId ||
-			!itemCategory ||
-			!itemCategory ||
-			currentShelf === itemCategory
-		) {
-			alert("Nothing change!");
-			return;
-		}
-
-		const result = await api.update({ id: bookId }, itemCategory);
-
-		if (!result) {
-			alert("Something went wrong");
-			return;
-		}
-
-		if (currentLocation.pathname === CustomPath.root) {
-			await getBookList();
-		} else {
-			setShelf(itemCategory)
-		}
-		alert("Done");
-	};
 
 	return (
 		<li>
@@ -54,13 +23,13 @@ const BookItem = ({
 						style={{
 							width: 128,
 							height: 193,
-							backgroundImage: backgroundImage,
+							backgroundImage,
 						}}
 					></div>
 					<div className="book-shelf-changer">
 						<select
-							value={shelf ?? "none"}
-							onChange={(event) => changeBookCategory(event)}
+							value={book?.shelf ?? "none"}
+							onChange={(event) => updateBookShelf(book, event.target.value)}
 						>
 							<option value="" disabled>
 								Move to...
@@ -78,6 +47,17 @@ const BookItem = ({
 			</div>
 		</li>
 	);
+};
+
+BookItem.propTypes = {
+	title: PropTypes.string,
+	authors: PropTypes.array,
+	thumbnail: PropTypes.string,
+	bookId: PropTypes.string,
+	getBookList: PropTypes.func,
+	currentShelf: PropTypes.string,
+	book: PropTypes.object,
+	updateBookShelf: PropTypes.func,
 };
 
 export default BookItem;
